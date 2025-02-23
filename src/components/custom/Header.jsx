@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 function Header() {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // Hook for programmatic navigation
 
   useEffect(() => {
     // Function to update user state when login occurs from another component
@@ -44,18 +46,22 @@ function Header() {
 
     // Trigger storage event manually
     window.dispatchEvent(new Event("storage"));
+
+    // Navigate to home page after logout
+    navigate("/");
   };
 
   return (
     <div className="p-4 bg-white text-black shadow-md flex justify-between items-center">
-      {/* Logo */}
-      <img src="/logo.png" alt="Logo" className="h-20 w-20" />
+      {/* Logo - Clicking navigates to home */}
+      <Link to="/">
+        <img src="/logo.png" alt="Logo" className="h-20 w-20 cursor-pointer" />
+      </Link>
 
-
-      {/* Title */}
-      <div className="text-xl font-semibold">
-        <span>AI Trip Planner</span>
-      </div>
+      {/* Title - Clicking navigates to home */}
+      <Link to="/" className="text-xl font-semibold cursor-pointer">
+        AI Trip Planner
+      </Link>
 
       {/* Google Login/Profile */}
       <div>
@@ -64,7 +70,7 @@ function Header() {
             src={user.picture}
             alt="User"
             className="h-10 w-10 rounded-full cursor-pointer"
-            onClick={handleGoogleLogout}
+            onClick={handleGoogleLogout} // Clicking logs out and redirects
           />
         ) : (
           <GoogleLogin onSuccess={handleGoogleLoginSuccess} theme="outline" />
